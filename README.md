@@ -1,2 +1,5 @@
 # CSP3341-Java-Preliminary
-Preliminary Java project for CSP3341 demonstrating environment setup, compilation, and execution using a simple console-based application.
+This repository contains a simple Java console application developed as part of CSP3341 – Programming Languages and Paradigms.
+
+The project demonstrates Java environment setup, compilation, execution, and basic program structure.
+
