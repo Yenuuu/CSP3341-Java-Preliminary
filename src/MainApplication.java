@@ -4,17 +4,25 @@ import java.util.Scanner;
 /**
  * MainApplication
  *
- * Console based user interface for HabitTrackerPlus.
- * This class only handles input and output.
- * All business logic is delegated to TrackerService.
+ * Console user interface for HabitTrackerPlus.
+ * Loads saved data at startup and saves data on exit.
  */
 public class MainApplication {
 
     public static void main(String[] args) {
 
         TrackerService trackerService = new TrackerService();
-        Scanner scanner = new Scanner(System.in);
+        FileStorageService storage = new FileStorageService("habits.csv", "logs.csv");
 
+        // Load saved data if files exist
+        try {
+            trackerService.loadData(storage.loadHabits(), storage.loadLogs());
+            System.out.println("Data loaded successfully.");
+        } catch (Exception ex) {
+            System.out.println("No saved data found. Starting fresh.");
+        }
+
+        Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
         while (running) {
@@ -84,13 +92,23 @@ public class MainApplication {
             } else if (choice.equals("5")) {
 
                 running = false;
-                System.out.println("Goodbye.");
+                System.out.println("Exiting...");
 
             } else {
                 System.out.println("Invalid option. Try again.");
             }
         }
 
+        // Save data on exit
+        try {
+            storage.saveHabits(trackerService.listHabits());
+            storage.saveLogs(trackerService.getAllLogsFlattened());
+            System.out.println("Data saved successfully.");
+        } catch (Exception ex) {
+            System.out.println("Failed to save data: " + ex.getMessage());
+        }
+
         scanner.close();
+        System.out.println("Goodbye.");
     }
 }
